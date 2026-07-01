@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - NeuralArt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .result-card {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .receipt {
+            background: rgba(15, 23, 42, 0.55);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: left;
+            margin: 24px 0;
+            font-size: 0.92rem;
+        }
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            color: #cbd5e1;
+        }
+        .btn-home {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+        }
+        .btn-home:hover { color: white; opacity: 0.92; }
+    </style>
+</head>
+<body>
+    <div class="result-card">
+        <div class="success-icon"><i class="fas fa-check"></i></div>
+        <h2 class="orbitron text-white mb-2">Payment Successful</h2>
+        <p class="text-muted">Your subscription is now active. Enjoy unlimited style transfers!</p>
+
+        <div class="receipt">
+            <div class="receipt-row">
+                <span>Transaction ID</span>
+                <strong class="text-white">{{ payment.transaction_id }}</strong>
+            </div>
+            <div class="receipt-row">
+                <span>Plan</span>
+                <strong class="text-white">{{ payment.plan | upper }}</strong>
+            </div>
+            <div class="receipt-row">
+                <span>Amount Paid</span>
+                <strong class="text-white">${{ '%.2f' | format(payment.amount) }}</strong>
+            </div>
+            <div class="receipt-row">
+                <span>Card</span>
+                <strong class="text-white">**** **** **** {{ payment.card_last4 or '----' }}</strong>
+            </div>
+            <div class="receipt-row">
+                <span>Date</span>
+                <strong class="text-white">{{ payment.created_at.strftime('%d %b %Y, %H:%M UTC') }}</strong>
+            </div>
+        </div>
+
+        <a href="{{ url_for('index') }}" class="btn btn-home">Start Creating</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
