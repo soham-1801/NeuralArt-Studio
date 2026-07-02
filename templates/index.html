@@ -272,8 +272,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(15, 23, 42, 0.9);
-        backdrop-filter: blur(5px);
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(8px);
         z-index: 9999;
         display: flex;
         align-items: center;
@@ -288,18 +288,126 @@
         pointer-events: all;
     }
     .cyber-spinner {
-        width: 80px;
-        height: 80px;
-        border: 4px solid transparent;
-        border-top: 4px solid #818cf8;
-        border-right: 4px solid #c084fc;
+        width: 60px;
+        height: 60px;
+        border: 3px solid transparent;
+        border-top: 3px solid #818cf8;
+        border-right: 3px solid #c084fc;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        box-shadow: 0 0 15px rgba(129, 140, 248, 0.5);
+        box-shadow: 0 0 15px rgba(129, 140, 248, 0.4);
+        margin-bottom: 24px;
     }
     @keyframes spin {
-        0% { transform: rotate(0deg); }  
+        0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+    }
+    .progress-container {
+        width: 340px;
+        max-width: 90vw;
+    }
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .progress-header span {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 13px;
+        letter-spacing: 1.5px;
+        color: #818cf8;
+    }
+    .progress-percent {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #818cf8, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .progress-track {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #818cf8, #c084fc, #818cf8);
+        background-size: 200% 100%;
+        border-radius: 10px;
+        transition: width 0.4s ease;
+        animation: shimmer 1.5s ease-in-out infinite;
+        box-shadow: 0 0 12px rgba(129, 140, 248, 0.5);
+    }
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    .progress-step {
+        margin-top: 18px;
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.5px;
+        min-height: 18px;
+        transition: color 0.3s ease;
+    }
+    .progress-step.active {
+        color: #c084fc;
+    }
+    .progress-steps-list {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding: 0 4px;
+    }
+    .step-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        opacity: 0.3;
+        transition: opacity 0.3s ease;
+    }
+    .step-item.active {
+        opacity: 1;
+    }
+    .step-item.done {
+        opacity: 0.7;
+    }
+    .step-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+    .step-item.active .step-dot {
+        background: #818cf8;
+        border-color: #818cf8;
+        box-shadow: 0 0 10px rgba(129, 140, 248, 0.6);
+    }
+    .step-item.done .step-dot {
+        background: #34d399;
+        border-color: #34d399;
+    }
+    .step-label {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.4);
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .step-item.active .step-label {
+        color: #c084fc;
+    }
+    .step-item.done .step-label {
+        color: #34d399;
     }
 
     /* Navbar Styles */
@@ -843,12 +951,29 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('gallery') }}">Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
                 <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
             </ul>
             {% if current_user.is_authenticated %}
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-outline-warning ms-2 rounded-pill px-3">
+                    <i class="fas fa-shield-alt me-1"></i>Admin
+                </a>
+                {% endif %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-light ms-2 rounded-pill px-3">
+                    <i class="fas fa-th-large me-1"></i>Dashboard
+                </a>
+                <a href="{{ url_for('upscale') }}" class="btn btn-sm btn-outline-info ms-2 rounded-pill px-3">
+                    <i class="fas fa-expand-arrows-alt me-1"></i>Upscale
+                </a>
+                <a href="{{ url_for('text_to_image') }}" class="btn btn-sm btn-outline-warning ms-2 rounded-pill px-3">
+                    <i class="fas fa-pen-fancy me-1"></i>Text to Image
+                </a>
+                <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-light ms-2 rounded-pill px-3">
+                    <i class="fas fa-user me-1"></i>Profile
+                </a>
                 <span class="navbar-text ms-3 text-light">Welcome, {{ current_user.name }}</span>
                 <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-light ms-3 rounded-pill px-4">Logout</a>
             {% else %}
@@ -858,18 +983,36 @@
     </div>
 </nav>
 
-{% with messages = get_flashed_messages() %}
+{% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     <div style="position: fixed; top: 80px; left: 0; right: 0; z-index: 1050; padding: 0 15px;">
-    {% for message in messages %}
-      <div class="alert alert-info alert-dismissible fade show shadow" role="alert">
+    {% for category, message in messages %}
+      {% if category == 'verification_link' %}
+      <div class="alert alert-info alert-dismissible fade show shadow" role="alert" style="background: rgba(129,140,248,0.15); border-color: #818cf8;">
+        <i class="fas fa-envelope me-1"></i>A new verification link has been sent to your email.
+        <a href="{{ message }}" target="_blank" class="text-white fw-bold text-decoration-underline">Click here to verify</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% else %}
+      <div class="alert alert-{{ category or 'info' }} alert-dismissible fade show shadow" role="alert">
         {{ message }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+      {% endif %}
     {% endfor %}
     </div>
   {% endif %}
 {% endwith %}
+
+{% if current_user.is_authenticated and not current_user.email_verified %}
+<div style="position: fixed; top: 130px; left: 0; right: 0; z-index: 1040; padding: 0 15px;">
+    <div class="alert alert-warning alert-dismissible fade show shadow text-center mb-0" role="alert" style="background: rgba(245, 158, 11, 0.15); border-color: #f59e0b; color: #fde68a;">
+        <i class="fas fa-envelope me-2"></i>Please verify your email address.
+        <a href="{{ url_for('resend_verification') }}" class="text-white fw-bold ms-2">Resend verification link</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+{% endif %}
 
 <div class="header-section" id="home">
     <div class="container">
@@ -881,6 +1024,7 @@
 <div class="container mb-5 fade-in-up">
     <form method="post" action="{{ url_for('index') }}" enctype="multipart/form-data" id="uploadForm">
         {{ form.hidden_tag() }}
+        <input type="hidden" name="mask_data" id="mask_data" value="">
         
         <div class="row g-4">
             <!-- Content Image Section -->
@@ -906,6 +1050,15 @@
                                 {% endif %}
                             </div>
                             {{ form.content(class="file-input", id="contentInput") }}
+                        </div>
+                        <div class="mt-3 text-center">
+                            <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-3 py-1" onclick="openMaskEditor()">
+                                <i class="fas fa-paint-brush me-1"></i>Selective Style Mask (Advanced)
+                            </button>
+                            <div id="maskStatusBadge" class="mt-2" style="display:none;">
+                                <span class="badge bg-success rounded-pill p-2"><i class="fas fa-check-circle me-1"></i>Mask Applied (Selective Styling Active)</span>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-1" onclick="clearMaskData()"><i class="fas fa-times-circle"></i> Remove</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -943,80 +1096,19 @@
         <!-- Style Preset Gallery -->
         <div class="preset-gallery-wrap">
             <p class="preset-gallery-title"><i class="fas fa-palette"></i>&nbsp;Quick Style Presets</p>
-            <div class="preset-scroll" id="presetScroll">
-
-                <div class="preset-card" onclick="selectPreset(this,'la_muse.jpg','La Muse')">
+                {% for p in style_presets %}
+                <div class="preset-card {% if p.pro %}pro-preset-card{% endif %}" onclick="selectPreset(this,'{{ p.src }}','{{ p.name }}','{{ p.file }}')">
                     <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='la_muse.jpg') }}" alt="La Muse" loading="lazy"></div>
+                    {% if p.pro %}
+                    <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-1" style="z-index:2;font-size:0.6rem;padding:0.25em 0.4em;"><i class="fas fa-crown me-1"></i>PRO</span>
+                    {% endif %}
+                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename=p.src) }}" alt="{{ p.name }}" loading="lazy"></div>
                     <div class="preset-card-body">
-                        <div class="preset-card-name">La Muse</div>
-                        <div class="preset-card-artist">Picasso</div>
+                        <div class="preset-card-name">{{ p.name }}</div>
+                        <div class="preset-card-artist">{{ p.desc }}</div>
                     </div>
                 </div>
-
-                <div class="preset-card" onclick="selectPreset(this,'mondrian.jpg','Mondrian Grid')">
-                    <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='mondrian.jpg') }}" alt="Mondrian" loading="lazy"></div>
-                    <div class="preset-card-body">
-                        <div class="preset-card-name">Mondrian Grid</div>
-                        <div class="preset-card-artist">Mondrian</div>
-                    </div>
-                </div>
-
-                <div class="preset-card" onclick="selectPreset(this,'brushstrokes.jpg','Brushstrokes')">
-                    <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='brushstrokes.jpg') }}" alt="Brushstrokes" loading="lazy"></div>
-                    <div class="preset-card-body">
-                        <div class="preset-card-name">Brushstrokes</div>
-                        <div class="preset-card-artist">Lichtenstein</div>
-                    </div>
-                </div>
-
-                <div class="preset-card" onclick="selectPreset(this,'woman_with_hat_matisse.jpg','Woman with Hat')">
-                    <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='woman_with_hat_matisse.jpg') }}" alt="Woman with Hat" loading="lazy"></div>
-                    <div class="preset-card-body">
-                        <div class="preset-card-name">Woman with Hat</div>
-                        <div class="preset-card-artist">Matisse</div>
-                    </div>
-                </div>
-
-                <div class="preset-card" onclick="selectPreset(this,'sketch.png','Sketch Lines')">
-                    <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='sketch.png') }}" alt="Sketch Lines" loading="lazy"></div>
-                    <div class="preset-card-body">
-                        <div class="preset-card-name">Sketch Lines</div>
-                        <div class="preset-card-artist">Classic</div>
-                    </div>
-                </div>
-
-                <div class="preset-card" onclick="selectPreset(this,'picasso_seated_nude_hr.jpg','Seated Nude')">
-                    <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='picasso_seated_nude_hr.jpg') }}" alt="Seated Nude" loading="lazy"></div>
-                    <div class="preset-card-body">
-                        <div class="preset-card-name">Seated Nude</div>
-                        <div class="preset-card-artist">Picasso</div>
-                    </div>
-                </div>
-
-                <div class="preset-card" onclick="selectPreset(this,'contrast_of_forms.jpg','Contrast of Forms')">
-                    <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='contrast_of_forms.jpg') }}" alt="Contrast of Forms" loading="lazy"></div>
-                    <div class="preset-card-body">
-                        <div class="preset-card-name">Contrast of Forms</div>
-                        <div class="preset-card-artist">L&eacute;ger</div>
-                    </div>
-                </div>
-
-                <div class="preset-card" onclick="selectPreset(this,'scene_de_rue.jpg','Scene de Rue')">
-                    <div class="preset-active-check"><i class="fas fa-check"></i></div>
-                    <div class="preset-thumb-wrap"><img src="{{ url_for('send_style_preset', filename='scene_de_rue.jpg') }}" alt="Scene de Rue" loading="lazy"></div>
-                    <div class="preset-card-body">
-                        <div class="preset-card-name">Scene de Rue</div>
-                        <div class="preset-card-artist">Impressionist</div>
-                    </div>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
 
@@ -1035,7 +1127,55 @@
                         {{ form.alpha(id="alphaHidden", style="display:none;") }}
                     </div>
                 </div>
-                <div class="text-center mt-5">
+                <div class="d-flex justify-content-center align-items-center gap-4 mt-4 flex-wrap">
+                    <div class="form-check form-switch">
+                        {{ form.preserve_color(class="form-check-input", id="preserveColorSwitch", role="switch") }}
+                        <label class="form-check-label fw-semibold" for="preserveColorSwitch" style="color: #e2e8f0; font-size: 0.9rem;">
+                            <i class="fas fa-palette me-1"></i>Preserve Original Colors
+                        </label>
+                    </div>
+                    <div class="form-check form-switch">
+                        {{ form.use_multiscale(class="form-check-input", id="multiScaleSwitch", role="switch") }}
+                        <label class="form-check-label fw-semibold" for="multiScaleSwitch" style="color: #e2e8f0; font-size: 0.9rem;">
+                            <i class="fas fa-layer-group me-1"></i>Multi-scale Enhancement
+                        </label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="multiStyleToggle" onchange="toggleMultiStyle()">
+                        <label class="form-check-label fw-semibold" for="multiStyleToggle" style="color: #e2e8f0; font-size: 0.9rem;">
+                            <i class="fas fa-paint-brush me-1"></i>Blend Two Styles
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Second Style Upload (hidden by default) -->
+                <div id="secondStyleSection" style="display:none;" class="mt-3">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="drop-zone" id="style2DropZone">
+                                <div class="drop-zone-content" id="style2DropContent">
+                                    <div class="drop-zone-text">
+                                        <div class="drop-zone-icon"><i class="fas fa-paint-brush"></i></div>
+                                        <p class="mb-1 fw-semibold" style="color:#e2e8f0;">Second Style Image</p>
+                                        <p class="mb-2" style="color:#64748b;font-size:0.82rem;">drag or click to browse</p>
+                                    </div>
+                                </div>
+                                {{ form.style2(class="file-input", id="style2Input") }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-2">
+                        <div class="col-md-6">
+                            <label for="blendRange" class="form-label fw-semibold d-block text-center" style="font-size:0.8rem; color:#c084fc;">
+                                <i class="fas fa-sliders-h me-1"></i>Style Blend: Style 1 <span id="blendLabel">50</span>% / Style 2 <span id="blendLabel2">50</span>%
+                            </label>
+                            <input type="range" class="form-range" id="blendRange" min="0" max="100" value="50" oninput="syncBlend(this.value)">
+                            {{ form.blend_ratio(id="blendHidden", style="display:none;") }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
                     {{ form.submit(class="btn btn-primary shadow-lg btn-glow") }}
                 </div>
             </div>
@@ -1071,13 +1211,54 @@
                     </div>
                 </div>
                 <div class="comparison-footer">
-                    <a href="{{ url_for('send_image', filename=result_image) }}"
-                       download class="btn btn-outline-light">
-                        <i class="fas fa-download me-2"></i>Download Result
-                    </a>
-                    <span style="color:#64748b;font-size:0.82rem;">
-                        <i class="fas fa-hand-pointer me-1"></i>Drag the handle to compare original vs&nbsp;stylized
-                    </span>
+                    <div class="d-flex flex-wrap align-items-center gap-2 w-100">
+                        <!-- Download -->
+                        <a href="{{ url_for('send_image', filename=result_image) }}"
+                           download class="btn btn-outline-light btn-sm rounded-pill">
+                            <i class="fas fa-download me-1"></i>Download
+                        </a>
+
+                        <!-- Resolution Badge -->
+                        <span class="badge bg-dark rounded-pill px-3 py-2" style="font-size:0.72rem;">
+                            <i class="fas fa-expand-arrows-alt me-1"></i>{{ output_resolution }}p
+                        </span>
+
+                        <!-- Watermark notice for free -->
+                        {% if current_plan == 'free' %}
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-2" style="font-size:0.72rem;">
+                            <i class="fas fa-watermark me-1"></i>Watermarked
+                        </span>
+                        {% else %}
+                        <span class="badge bg-success rounded-pill px-3 py-2" style="font-size:0.72rem;">
+                            <i class="fas fa-check me-1"></i>HD
+                        </span>
+                        {% endif %}
+
+                        <span class="text-muted" style="font-size:0.78rem; flex:1; text-align:center;">
+                            <i class="fas fa-hand-pointer me-1"></i>Slide to compare
+                        </span>
+
+                        <!-- Social Share -->
+                        {% set share_link = url_for('artwork_detail', transfer_id=transfer_id, _external=True) if transfer_id else url_for('send_image', filename=result_image, _external=True) %}
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-info rounded-start-pill px-2" title="Share on Twitter"
+                                onclick="window.open('https://twitter.com/intent/tweet?text=Check%20out%20my%20AI%20art!&url={{ share_link | urlencode }}','_blank','width=600,height=400')">
+                                <i class="fab fa-twitter"></i>
+                            </button>
+                            <button class="btn btn-outline-primary px-2" title="Share on Facebook"
+                                onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ share_link | urlencode }}','_blank','width=600,height=400')">
+                                <i class="fab fa-facebook-f"></i>
+                            </button>
+                            <button class="btn btn-outline-success px-2" title="Share on WhatsApp"
+                                onclick="window.open('https://wa.me/?text=Check%20out%20my%20AI%20art!%20{{ share_link | urlencode }}','_blank','width=600,height=400')">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary rounded-end-pill px-2" title="Share on LinkedIn"
+                                onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url={{ share_link | urlencode }}','_blank','width=600,height=400')">
+                                <i class="fab fa-linkedin-in"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1222,7 +1403,8 @@
                         <h4 class="fw-bold" style="font-family: 'Orbitron', sans-serif; color: #ffffff !important;">FREE</h4>
                         <h2 class="my-3" style="color: #818cf8;">$0</h2>
                         <p style="color: #cbd5e1 !important;">5 transfers per day</p>
-                        <p style="color: #cbd5e1 !important;">Basic styles</p>
+                        <p style="color: #cbd5e1 !important;"><span class="badge bg-secondary me-1">512px</span> Output</p>
+                        <p style="color: #cbd5e1 !important;"><span class="badge bg-secondary me-1">&#9830;</span> Watermarked</p>
                         <a href="#demo" class="btn btn-outline-light rounded-pill px-4 mt-3">Get Started</a>
                     </div>
                 </div>
@@ -1232,7 +1414,8 @@
                         <h4 class="fw-bold" style="font-family: 'Orbitron', sans-serif; color: #ffffff !important;">PRO</h4>
                         <h2 class="my-3" style="color: #c084fc;">$9.99</h2>
                         <p style="color: #cbd5e1 !important;">Unlimited transfers</p>
-                        <p style="color: #cbd5e1 !important;">All styles + HD output</p>
+                        <p style="color: #cbd5e1 !important;"><span class="badge bg-primary me-1">1024px</span> HD Output</p>
+                        <p style="color: #cbd5e1 !important;"><i class="fas fa-check-circle text-success me-1"></i>No Watermark</p>
                         <a href="{{ url_for('checkout', plan='pro') }}" class="btn btn-primary rounded-pill px-4 mt-3">Subscribe</a>
                     </div>
                 </div>
@@ -1241,7 +1424,8 @@
                         <h4 class="fw-bold" style="font-family: 'Orbitron', sans-serif; color: #ffffff !important;">TEAM</h4>
                         <h2 class="my-3" style="color: #f472b6;">$29.99</h2>
                         <p style="color: #cbd5e1 !important;">Up to 10 users</p>
-                        <p style="color: #cbd5e1 !important;">API access & priority support</p>
+                        <p style="color: #cbd5e1 !important;"><span class="badge bg-primary me-1">2048px</span> 4K Output</p>
+                        <p style="color: #cbd5e1 !important;"><i class="fas fa-check-circle text-success me-1"></i>API Access</p>
                         <a href="{{ url_for('checkout', plan='team') }}" class="btn btn-outline-light rounded-pill px-4 mt-3">Contact Sales</a>
                     </div>
                 </div>
@@ -1281,6 +1465,57 @@
     <div id="toastContainer" class="toast-container"></div>
 </div>
 
+<!-- Selective Style Mask Modal -->
+<div class="modal fade" id="maskModal" tabindex="-1" aria-labelledby="maskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title orbitron" id="maskModalLabel"><i class="fas fa-paint-brush me-2" style="color:#818cf8;"></i>Selective Style Mask Studio</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <p class="text-muted small mb-3">Paint the areas where you want the style applied (White = Style, Black = Keep Original Content).</p>
+                
+                <!-- Tools -->
+                <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap mb-3 p-2 rounded" style="background:rgba(0,0,0,0.3);">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="small text-light mb-0"><i class="fas fa-circle me-1"></i>Size:</label>
+                        <input type="range" class="form-range" id="brushSize" min="10" max="100" value="40" style="width: 100px;">
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" name="brushMode" id="modePaint" autocomplete="off" checked onclick="setBrushMode('paint')">
+                        <label class="btn btn-outline-light" for="modePaint"><i class="fas fa-paint-brush me-1"></i>Paint Style (White)</label>
+
+                        <input type="radio" class="btn-check" name="brushMode" id="modeErase" autocomplete="off" onclick="setBrushMode('erase')">
+                        <label class="btn btn-outline-light" for="modeErase"><i class="fas fa-eraser me-1"></i>Protect Original (Black)</label>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-secondary" onclick="quickMask('all')" title="Style entire image">All Style</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="quickMask('bg')" title="Protect center subject">Background Only</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="quickMask('subj')" title="Style center subject only">Subject Only</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="resetMaskCanvas()"><i class="fas fa-trash me-1"></i>Clear</button>
+                </div>
+
+                <!-- Canvas Container -->
+                <div class="position-relative d-inline-block border rounded overflow-hidden" style="max-width:100%; max-height:550px; border-color:rgba(255,255,255,0.2) !important;">
+                    <img id="maskBgImg" style="display:block; max-width:100%; max-height:550px; pointer-events:none;">
+                    <canvas id="maskCanvas" style="cursor: crosshair; position:absolute; top:0; left:0; width:100%; height:100%; opacity: 0.65;"></canvas>
+                </div>
+            </div>
+            <div class="modal-footer border-top border-secondary justify-content-between">
+                <span class="text-muted small"><i class="fas fa-lightbulb me-1" style="color:#fbbf24;"></i>Tip: Use preset buttons for instant 1-click masking!</span>
+                <div>
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4 me-2" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" style="background:linear-gradient(45deg,#6366f1,#a855f7);border:none;" onclick="saveMaskData()">
+                        <i class="fas fa-check me-2"></i>Apply Mask
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="signInModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1);">
@@ -1299,6 +1534,9 @@
                     </div>
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-primary rounded-pill px-5 w-100">Sign In</button>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a href="{{ url_for('forgot_password') }}" class="text-muted small text-decoration-none">Forgot password?</a>
                     </div>
                     <p class="text-center text-muted mt-3 mb-0">
                         Don't have an account? <a href="#" style="color: #818cf8;" data-bs-toggle="modal" data-bs-target="#signUpModal" data-bs-dismiss="modal">Sign up</a>
@@ -1384,9 +1622,35 @@
 
 <!-- Loading Overlay -->
 <div class="loader-overlay" id="loader">
-    <div class="cyber-spinner mb-4"></div>
-    <h3 class="text-white" style="font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">PROCESSING</h3>
-    <p class="text-muted">Neural Network is dreaming...</p>
+    <div class="cyber-spinner"></div>
+    <div class="progress-container">
+        <div class="progress-header">
+            <span>PROCESSING</span>
+            <div class="progress-percent" id="progressPercent">0%</div>
+        </div>
+        <div class="progress-track">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-step active" id="progressStep">Initializing neural network...</div>
+        <div class="progress-steps-list">
+            <div class="step-item active" id="step1">
+                <div class="step-dot"></div>
+                <div class="step-label">Encode</div>
+            </div>
+            <div class="step-item" id="step2">
+                <div class="step-dot"></div>
+                <div class="step-label">Transfer</div>
+            </div>
+            <div class="step-item" id="step3">
+                <div class="step-dot"></div>
+                <div class="step-label">Decode</div>
+            </div>
+            <div class="step-item" id="step4">
+                <div class="step-dot"></div>
+                <div class="step-label">Finalize</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1537,6 +1801,18 @@
             range.style.background = `linear-gradient(to right, #818cf8 0%, #c084fc ${percentage}%, rgba(30, 41, 59, 0.8) ${percentage}%, rgba(30, 41, 59, 0.8) 100%)`;
         }
 
+        window.syncBlend = function(val) {
+            const blendHidden = document.getElementById('blendHidden');
+            if (blendHidden) blendHidden.value = (parseFloat(val) / 100).toFixed(2);
+            document.getElementById('blendLabel').textContent = val;
+            document.getElementById('blendLabel2').textContent = 100 - val;
+        };
+
+        window.toggleMultiStyle = function() {
+            const section = document.getElementById('secondStyleSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        };
+
         if (range) {
             range.addEventListener('input', updateRange);
             // Init: set hidden field and UI on page load
@@ -1585,9 +1861,73 @@
         // Form Submit Loader Logic
         const uploadForm = document.getElementById('uploadForm');
         const loader = document.getElementById('loader');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressStep = document.getElementById('progressStep');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const step4 = document.getElementById('step4');
+
+        const steps = [
+            { el: step1, text: 'Encoding content image...', target: 15 },
+            { el: step1, text: 'Loading style features...', target: 30, done: step1, next: step2 },
+            { el: step2, text: 'Applying AdaIN style transfer...', target: 55 },
+            { el: step2, text: 'Blending style patterns...', target: 70, done: step2, next: step3 },
+            { el: step3, text: 'Decoding stylized result...', target: 85 },
+            { el: step3, text: 'Enhancing output quality...', target: 95, done: step3, next: step4 },
+            { el: step4, text: 'Finalizing artwork...', target: 100, done: step4 }
+        ];
+
+        let progressInterval = null;
+
+        function startProgress() {
+            let current = 0;
+            let stepIndex = 0;
+
+            progressInterval = setInterval(() => {
+                if (stepIndex >= steps.length) {
+                    clearInterval(progressInterval);
+                    return;
+                }
+
+                const step = steps[stepIndex];
+                if (current < step.target) {
+                    const speed = current < 70 ? (Math.random() * 6 + 3) : (Math.random() * 3 + 1);
+                    current += speed;
+                    if (current > step.target) current = step.target;
+                } else {
+                    if (step.done) step.done.classList.add('done');
+                    if (step.done) step.done.classList.remove('active');
+                    if (step.next) step.next.classList.add('active');
+                    stepIndex++;
+                    if (stepIndex < steps.length) {
+                        progressStep.textContent = steps[stepIndex].text;
+                    }
+                }
+
+                progressBar.style.width = current + '%';
+                progressPercent.textContent = Math.floor(current) + '%';
+            }, 60);
+        }
+
+        function resetProgress() {
+            if (progressInterval) clearInterval(progressInterval);
+            progressBar.style.width = '0%';
+            progressPercent.textContent = '0%';
+            progressStep.textContent = 'Initializing neural network...';
+            progressStep.classList.add('active');
+            [step1, step2, step3, step4].forEach(s => {
+                s.classList.remove('active', 'done');
+            });
+            step1.classList.add('active');
+        }
+
         if (uploadForm && loader) {
             uploadForm.addEventListener('submit', function() {
+                resetProgress();
                 loader.classList.add('active');
+                startProgress();
             });
         }
 
@@ -1602,6 +1942,7 @@
     function initDropZones() {
         setupDropZone('contentDropZone', 'contentInput', 'contentDropContent');
         setupDropZone('styleDropZone',   'styleInput',   'styleDropContent');
+        setupDropZone('style2DropZone',  'style2Input',  'style2DropContent');
     }
 
     function setupDropZone(zoneId, inputId, contentId) {
@@ -1694,7 +2035,7 @@
     // =============================================
     // STYLE PRESET GALLERY
     // =============================================
-    window.selectPreset = async function(card, filename, displayName) {
+    window.selectPreset = async function(card, filename, displayName, presetFile) {
         // Visual: highlight selected card
         document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
@@ -1702,6 +2043,10 @@
         const styleInput   = document.getElementById('styleInput');
         const styleContent = document.getElementById('styleDropContent');
         const styleZone    = document.getElementById('styleDropZone');
+        const stylePathInput = document.querySelector('input[name="style_path"]');
+        if (stylePathInput && presetFile) {
+            stylePathInput.value = presetFile;
+        }
 
         // Loading state in drop zone
         styleContent.innerHTML =
@@ -1777,6 +2122,148 @@
             handle.style.left       = startPct + '%';
             if (startPct <= 50) clearInterval(introTimer);
         }, 16);
+    }
+
+    // =============================================
+    // SELECTIVE STYLE MASK CANVAS ENGINE
+    // =============================================
+    let maskCanvas = null;
+    let maskCtx = null;
+    let isDrawingMask = false;
+    let currentBrushMode = 'paint';
+    let contentImgForMask = null;
+
+    function openMaskEditor() {
+        const contentInput = document.getElementById('contentInput');
+        if (!contentInput || !contentInput.files || !contentInput.files[0]) {
+            showToast('Please select/drop a Content Image first before creating a mask.');
+            return;
+        }
+        const file = contentInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            contentImgForMask = new Image();
+            contentImgForMask.onload = function() {
+                const maxW = 700;
+                let w = contentImgForMask.width;
+                let h = contentImgForMask.height;
+                if (w > maxW) {
+                    h = Math.round((h * maxW) / w);
+                    w = maxW;
+                }
+                const bgImgEl = document.getElementById('maskBgImg');
+                bgImgEl.src = contentImgForMask.src;
+                bgImgEl.width = w;
+                bgImgEl.height = h;
+
+                maskCanvas = document.getElementById('maskCanvas');
+                maskCtx = maskCanvas.getContext('2d');
+                maskCanvas.width = w;
+                maskCanvas.height = h;
+
+                const existingMask = document.getElementById('mask_data').value;
+                if (existingMask) {
+                    const mImg = new Image();
+                    mImg.onload = function() {
+                        drawMaskStudioView(mImg);
+                    };
+                    mImg.src = existingMask;
+                } else {
+                    resetMaskCanvas();
+                }
+
+                setupCanvasEvents();
+                const modal = new bootstrap.Modal(document.getElementById('maskModal'));
+                modal.show();
+            };
+            contentImgForMask.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function drawMaskStudioView(maskLayerImg = null) {
+        if (!maskCtx || !contentImgForMask) return;
+        maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+        if (maskLayerImg) {
+            maskCtx.drawImage(maskLayerImg, 0, 0, maskCanvas.width, maskCanvas.height);
+        } else {
+            maskCtx.fillStyle = '#FFFFFF';
+            maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+        }
+    }
+
+    function setupCanvasEvents() {
+        if (!maskCanvas) return;
+        maskCanvas.onmousedown = function(e) { isDrawingMask = true; drawStroke(e); };
+        maskCanvas.onmousemove = function(e) { if (isDrawingMask) drawStroke(e); };
+        window.onmouseup = function() { isDrawingMask = false; };
+        
+        maskCanvas.ontouchstart = function(e) { isDrawingMask = true; drawStroke(e.touches[0]); e.preventDefault(); };
+        maskCanvas.ontouchmove = function(e) { if (isDrawingMask) drawStroke(e.touches[0]); e.preventDefault(); };
+        window.ontouchend = function() { isDrawingMask = false; };
+    }
+
+    function drawStroke(e) {
+        if (!maskCtx || !maskCanvas) return;
+        const rect = maskCanvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (maskCanvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (maskCanvas.height / rect.height);
+        const size = parseInt(document.getElementById('brushSize').value || 40, 10);
+
+        maskCtx.beginPath();
+        maskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
+        maskCtx.fillStyle = (currentBrushMode === 'paint') ? '#FFFFFF' : '#000000';
+        maskCtx.fill();
+    }
+
+    function setBrushMode(mode) {
+        currentBrushMode = mode;
+    }
+
+    function resetMaskCanvas() {
+        if (!maskCtx || !maskCanvas) return;
+        maskCtx.fillStyle = '#FFFFFF';
+        maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+    }
+
+    function quickMask(type) {
+        if (!maskCtx || !maskCanvas) return;
+        const w = maskCanvas.width;
+        const h = maskCanvas.height;
+        if (type === 'all') {
+            resetMaskCanvas();
+        } else if (type === 'bg') {
+            maskCtx.fillStyle = '#FFFFFF';
+            maskCtx.fillRect(0, 0, w, h);
+            maskCtx.beginPath();
+            maskCtx.ellipse(w / 2, h / 2, w * 0.35, h * 0.45, 0, 0, Math.PI * 2);
+            maskCtx.fillStyle = '#000000';
+            maskCtx.fill();
+        } else if (type === 'subj') {
+            maskCtx.fillStyle = '#000000';
+            maskCtx.fillRect(0, 0, w, h);
+            maskCtx.beginPath();
+            maskCtx.ellipse(w / 2, h / 2, w * 0.35, h * 0.45, 0, 0, Math.PI * 2);
+            maskCtx.fillStyle = '#FFFFFF';
+            maskCtx.fill();
+        }
+    }
+
+    function saveMaskData() {
+        if (!maskCanvas) return;
+        const dataUrl = maskCanvas.toDataURL('image/png');
+        document.getElementById('mask_data').value = dataUrl;
+        document.getElementById('maskStatusBadge').style.display = 'inline-block';
+        const modalEl = document.getElementById('maskModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+        showToast('Selective Style Mask applied successfully!');
+    }
+
+    function clearMaskData() {
+        document.getElementById('mask_data').value = '';
+        document.getElementById('maskStatusBadge').style.display = 'none';
+        showToast('Mask removed. Style will apply to entire image.');
     }
 </script>
 </body>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ challenge.title }} - NeuralArt</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    .orbitron { font-family: 'Orbitron', sans-serif; }
+    .navbar { background: rgba(15,23,42,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .navbar-brand { font-family: 'Orbitron', sans-serif; font-weight: 700; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .challenge-hero { background: linear-gradient(135deg, rgba(129,140,248,0.15), rgba(192,132,252,0.15)); border: 1px solid rgba(129,140,248,0.2); border-radius: 16px; padding: 2rem; margin-top: 6rem; }
+    .gallery-card { background: rgba(30,41,59,0.5); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; overflow: hidden; transition: all 0.3s; }
+    .gallery-card:hover { border-color: rgba(129,140,248,0.3); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .gallery-card img { width: 100%; height: 220px; object-fit: cover; }
+    .gallery-info { padding: 0.8rem 1rem; }
+    .gallery-info .user-name { font-size: 0.85rem; font-weight: 600; color: #e2e8f0; }
+    .gallery-info .date { font-size: 0.72rem; color: #64748b; }
+    .challenge-badge { background: linear-gradient(135deg, #818cf8, #c084fc); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; color: #fff; }
+    .challenge-theme { background: rgba(129,140,248,0.1); border: 1px solid rgba(129,140,248,0.2); border-radius: 8px; padding: 0.5rem 1rem; display: inline-block; }
+    .timer-badge { background: rgba(234,179,8,0.15); color: #fbbf24; border: 1px solid rgba(234,179,8,0.3); border-radius: 8px; padding: 0.3rem 0.8rem; font-size: 0.8rem; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #818cf8; }
+    .page-link { background: transparent !important; color: #e2e8f0 !important; border-color: #334155 !important; }
+    .page-link:hover { background: rgba(129,140,248,0.15) !important; }
+    .page-item.active .page-link { background: #6366f1 !important; border-color: #6366f1 !important; }
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}"><i class="fas fa-brain me-2"></i>NeuralArt</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ url_for('challenges') }}">Challenges</a></li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="position: fixed; top: 80px; left: 0; right: 0; z-index: 1050; padding: 0 15px;">
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category or 'info' }} alert-dismissible fade show shadow" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+    <div class="challenge-hero">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                {% if challenge.is_active %}
+                <span class="challenge-badge">ACTIVE</span>
+                {% else %}
+                <span class="badge bg-secondary rounded-pill px-3 py-1">ENDED</span>
+                {% endif %}
+                <h2 class="mt-2 mb-1" style="color:#f8fafc;">{{ challenge.title }}</h2>
+                <p class="text-muted mb-2">{{ challenge.description }}</p>
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <span class="challenge-theme"><i class="fas fa-palette me-1"></i>{{ challenge.theme }}</span>
+                    <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-images me-1"></i>{{ challenge.submissions_count }} submissions</span>
+                    {% if challenge.is_active %}
+                    <span class="timer-badge"><i class="fas fa-clock me-1"></i>Ends {{ challenge.ends_at.strftime('%d %b %Y, %H:%M UTC') }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                {% if current_user.is_authenticated and not challenge.is_expired %}
+                    {% if user_submission %}
+                    <span class="btn btn-outline-success rounded-pill px-4"><i class="fas fa-check me-1"></i>Submitted</span>
+                    {% else %}
+                    <a href="{{ url_for('submit_to_challenge', challenge_id=challenge.id) }}" class="btn btn-primary rounded-pill px-4"><i class="fas fa-upload me-1"></i>Submit Artwork</a>
+                    {% endif %}
+                {% elif not current_user.is_authenticated %}
+                <a href="{{ url_for('index') }}#auth" class="btn btn-outline-light rounded-pill px-4">Sign In to Submit</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h4 class="orbitron mt-4 mb-3"><i class="fas fa-th-large me-2"></i>Submissions</h4>
+    {% if submissions %}
+    <div class="row g-3">
+        {% for s in submissions %}
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="gallery-card">
+                <img src="{{ url_for('send_image', filename=s.transfer.result_image) }}" alt="Artwork" loading="lazy">
+                <div class="gallery-info">
+                    <div class="user-name">
+                        <i class="fas fa-user-circle me-1" style="color:#818cf8;"></i>
+                        {{ s.user.name if s.user else 'Anonymous' }}
+                    </div>
+                    <div class="date">{{ s.created_at.strftime('%d %b %Y') }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if pagination.pages > 1 %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('challenge_detail', challenge_id=challenge.id, page=pagination.prev_num) }}"><i class="fas fa-chevron-left"></i></a></li>
+            {% endif %}
+            {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if p %}
+                <li class="page-item {{ 'active' if p == pagination.page }}"><a class="page-link" href="{{ url_for('challenge_detail', challenge_id=challenge.id, page=p) }}">{{ p }}</a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+            {% if pagination.has_next %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('challenge_detail', challenge_id=challenge.id, page=pagination.next_num) }}"><i class="fas fa-chevron-right"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-palette text-muted" style="font-size:4rem;opacity:0.3;"></i>
+        <h5 class="text-muted mt-3">No submissions yet</h5>
+        <p class="text-muted">Be the first to submit your artwork!</p>
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-4 mb-5">
+        <a href="{{ url_for('challenges') }}" class="btn btn-outline-light rounded-pill px-4"><i class="fas fa-arrow-left me-1"></i>Back to Challenges</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

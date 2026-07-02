@@ -73,7 +73,7 @@ def download_decoder_model():
     print("STEP 3: Downloading Pre-trained Decoder Model")
     print("="*60)
     
-    # FIX #23: Use decoder.pth matching the URL filename
+    # Use decoder.pth matching the URL filename
     decoder_path = Path('decoder.pth')
     
     if decoder_path.exists():

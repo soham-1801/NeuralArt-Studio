@@ -64,7 +64,7 @@ class VGGEncoder(nn.Module):
         self.vgg = nn.Sequential(*list(self.vgg.children())[:31])
         enc_layers = list(self.vgg.children())
 
-        # FIX #11: Validate layer count before applying hardcoded slice indices.
+        # Validate layer count before applying hardcoded slice indices.
         # If a mock/wrong VGG is loaded, this gives a clear error instead of silent wrong results.
         n_layers = len(enc_layers)
         if n_layers < 31:
@@ -89,6 +89,22 @@ class VGGEncoder(nn.Module):
                 param.requires_grad = False
 
     def forward(self, input, is_test=False):
+        """Forward pass through VGG19 encoder layers.
+
+        Args:
+            input: Input tensor of shape (B, 3, H, W).
+            is_test: If True, return only the final h4 feature map (used for
+                     AdaIN style transfer inference). If False, return all
+                     intermediate feature maps for training.
+
+        Returns:
+            If is_test=True:  h4 tensor of shape (B, 512, H/8, W/8)
+            If is_test=False: tuple (h1, h2, h3, h4) where:
+                h1: (B, 64, H/2, W/2)   — relu1-1 features
+                h2: (B, 128, H/4, W/4)  — relu2-1 features
+                h3: (B, 256, H/8, W/8)  — relu3-1 features
+                h4: (B, 512, H/16, W/16) — relu4-1 features
+        """
         h1 = self.enc_1(input)
         h2 = self.enc_2(h1)
         h3 = self.enc_3(h2)

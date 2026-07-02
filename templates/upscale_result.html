@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upscale Result - NeuralArt</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    .orbitron { font-family: 'Orbitron', sans-serif; }
+    .navbar { background: rgba(15,23,42,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .navbar-brand { font-family: 'Orbitron', sans-serif; font-weight: 700; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-header { padding: 5rem 0 2rem; text-align: center; }
+    .page-header h1 { font-family: 'Orbitron', sans-serif; font-weight: 700; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .result-card { background: rgba(30,41,59,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+    .result-card img { width: 100%; border-radius: 12px; }
+    .info-badge { background: rgba(129,140,248,0.1); border: 1px solid rgba(129,140,248,0.2); border-radius: 8px; padding: 0.4rem 0.8rem; display: inline-block; font-size: 0.85rem; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #818cf8; }
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}"><i class="fas fa-brain me-2"></i>NeuralArt</a>
+    </div>
+</nav>
+
+<div class="page-header">
+    <div class="container">
+        <h1 class="display-5 fw-bold"><i class="fas fa-check-circle me-3" style="background:linear-gradient(to right,#34d399,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></i>Upscale Complete</h1>
+    </div>
+</div>
+
+<div class="container" style="max-width:800px;">
+    <div class="result-card p-4 mb-4">
+        <img src="{{ result_url }}" alt="Upscaled Image" style="max-height:500px;object-fit:contain;margin:0 auto;display:block;">
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+        <span class="info-badge"><i class="fas fa-compress-arrows-alt me-1"></i>Original: {{ original_size }}</span>
+        <span class="info-badge"><i class="fas fa-expand-arrows-alt me-1"></i>Upscaled: {{ new_size }}</span>
+        <span class="info-badge"><i class="fas fa-percentage me-1"></i>Scale: {{ scale }}x</span>
+    </div>
+
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{{ result_url }}" download="{{ result_filename }}" class="btn btn-primary rounded-pill px-4">
+            <i class="fas fa-download me-2"></i>Download
+        </a>
+        <a href="{{ url_for('upscale') }}" class="btn btn-outline-light rounded-pill px-4">
+            <i class="fas fa-redo me-2"></i>Upscale Another
+        </a>
+    </div>
+</div>
+
+<div style="height:5rem;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

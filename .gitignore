@@ -1,0 +1,45 @@
+# Python / Flask
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# User Uploads and Generated Images (Keep the directory structure but ignore contents)
+static/uploads/*
+!static/uploads/.gitkeep
+!static/uploads/placeholder.jpg
+!static/uploads/default_avatar.png
+!static/uploads/preset_*
+
+# IDE / System
+.vscode/
+.idea/
+.gemini/
+*.log
+.DS_Store
+Thumbs.db

@@ -3,8 +3,8 @@ import torch
 from torch.utils.data import DataLoader
 import torch.optim as optim
 from pathlib import Path
-# FIX #4: Explicit imports instead of wildcard '*' to avoid namespace pollution
-from utils.utils import get_transform, ImageFolderDataset, adaptive_instance_normalization, calc_mean_std
+# Explicit imports instead of wildcard '*' to avoid namespace pollution
+from utils.utils import get_transform, ImageFolderDataset, adaptive_instance_normalization, calc_mean_std, gram_matrix
 from utils.models import VGGEncoder, Decoder
 from tqdm import tqdm
 from torchvision.utils import save_image
@@ -45,6 +45,10 @@ def parse_arguments():
                         help='Content weight')
     parser.add_argument('--style_weight', type=float, default=5,
                         help='Style weight')
+    parser.add_argument('--use_gram', action='store_true', default=False,
+                        help='Use Gram matrix style loss (Gatys-style) instead of mean/std')
+    parser.add_argument('--style_layers', type=str, default='all',
+                        help='Layers for style loss: "all" (relu1-1 to relu4-1) or "high" (relu3-1, relu4-1 only)')
     
     parser.add_argument('--log_interval', type=int, default=1,
                         help='Log interval')
@@ -106,7 +110,7 @@ def main():
 
     optimizer = optim.Adam(decoder.parameters(), lr=args.lr)
 
-    # FIX #15: Per-iteration LR decay (original AdaIN paper implementation).
+    # Per-iteration LR decay (original AdaIN paper implementation).
     # Old code stepped per epoch — with lr_decay=5e-5 and 1 epoch, LR barely changed.
     # Now we manually decay LR after every optimizer.step() using the iteration count.
     iteration = [0]  # Use list for closure mutability in inner function
@@ -120,7 +124,7 @@ def main():
 
     if args.resume:
         if args.decoder_path and args.optimizer_path:
-            # FIX #5: Added weights_only=True for security + map_location for device compatibility
+            # Load with weights_only=True for security + map_location for device compatibility
             decoder.load_state_dict(torch.load(args.decoder_path, map_location=device, weights_only=True))
             optimizer.load_state_dict(torch.load(args.optimizer_path, map_location=device, weights_only=True))
         else:
@@ -159,10 +163,21 @@ def main():
             loss_c = mse_loss(g_feats[-1], t) * args.content_weight
 
             loss_s = 0
-            for g_f, s_f in zip(g_feats, s_feats):
-                g_mean, g_std = calc_mean_std(g_f)
-                s_mean, s_std = calc_mean_std(s_f)
-                loss_s += mse_loss(g_mean, s_mean) + mse_loss(g_std, s_std)
+            if args.style_layers == 'high':
+                layer_slice = slice(-2, None)  # only relu3-1, relu4-1
+            else:
+                layer_slice = slice(None)  # all layers
+
+            if args.use_gram:
+                for g_f, s_f in zip(g_feats[layer_slice], s_feats[layer_slice]):
+                    g_gram = gram_matrix(g_f)
+                    s_gram = gram_matrix(s_f)
+                    loss_s += mse_loss(g_gram, s_gram)
+            else:
+                for g_f, s_f in zip(g_feats[layer_slice], s_feats[layer_slice]):
+                    g_mean, g_std = calc_mean_std(g_f)
+                    s_mean, s_std = calc_mean_std(s_f)
+                    loss_s += mse_loss(g_mean, s_mean) + mse_loss(g_std, s_std)
             
             loss_s = loss_s * args.style_weight
 
@@ -171,7 +186,7 @@ def main():
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            _apply_lr_decay()  # FIX #15: decay LR after every iteration, not per epoch
+            _apply_lr_decay()  # Decay LR after every iteration, not per epoch
 
             progress_bar.set_description(f'Loss:{loss.item():4f}, Content Loss: {loss_c.item():4f}, Style Loss: {loss_s.item():4f}')
 
@@ -180,9 +195,9 @@ def main():
             running_sloss += loss_s.item()
             num_batches += 1
         
-        # FIX #15: scheduler.step() removed — LR decay now happens per-iteration above
+        # scheduler.step() removed — LR decay now happens per-iteration above
 
-        # FIX #10: Guard against division by zero if dataset is empty
+        # Guard against division by zero if dataset is empty
         if num_batches == 0:
             tqdm.write(f'[WARNING] Epoch {epoch+1}: No batches processed. Check that your dataset directories are not empty.')
             continue

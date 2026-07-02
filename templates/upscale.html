@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Upscaler - NeuralArt</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    .orbitron { font-family: 'Orbitron', sans-serif; }
+    .navbar { background: rgba(15,23,42,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .navbar-brand { font-family: 'Orbitron', sans-serif; font-weight: 700; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-header { padding: 5rem 0 2rem; text-align: center; }
+    .page-header h1 { font-family: 'Orbitron', sans-serif; font-weight: 700; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .upload-zone { border: 2px dashed rgba(129,140,248,0.3); border-radius: 16px; padding: 4rem 2rem; text-align: center; transition: all 0.3s; cursor: pointer; background: rgba(30,41,59,0.3); }
+    .upload-zone:hover { border-color: #818cf8; background: rgba(129,140,248,0.05); }
+    .upload-zone.dragover { border-color: #818cf8; background: rgba(129,140,248,0.1); transform: scale(1.01); }
+    .scale-option { background: rgba(30,41,59,0.6); border: 2px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s; }
+    .scale-option:hover { border-color: rgba(129,140,248,0.4); }
+    .scale-option.selected { border-color: #818cf8; background: rgba(129,140,248,0.1); }
+    .scale-option input { display: none; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #818cf8; }
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}"><i class="fas fa-brain me-2"></i>NeuralArt</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('challenges') }}">Challenges</a></li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="position: fixed; top: 80px; left: 0; right: 0; z-index: 1050; padding: 0 15px;">
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category or 'info' }} alert-dismissible fade show shadow" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="page-header">
+    <div class="container">
+        <h1 class="display-5 fw-bold"><i class="fas fa-expand-arrows-alt me-3"></i>Image Upscaler</h1>
+        <p class="text-muted">Enhance your images with high-quality upscaling. No quality loss.</p>
+    </div>
+</div>
+
+<div class="container" style="max-width:700px;">
+    <form id="upscaleForm" action="{{ url_for('upscale') }}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="scale" id="scaleInput" value="2">
+
+        <div class="upload-zone mb-4" id="dropZone">
+            <input type="file" name="image" id="imageInput" accept="image/png,image/jpeg,image/jpg" style="display:none;">
+            <i class="fas fa-cloud-upload-alt mb-3" style="font-size:3rem;color:#818cf8;"></i>
+            <h5>Drop your image here</h5>
+            <p class="text-muted mb-0">or click to browse (PNG, JPG, JPEG)</p>
+            <div id="preview" class="mt-3" style="display:none;">
+                <img id="previewImg" src="" alt="Preview" style="max-width:100%;max-height:300px;border-radius:12px;">
+            </div>
+        </div>
+
+        <h5 class="orbitron mb-3"><i class="fas fa-sliders-h me-2"></i>Scale Factor</h5>
+        <div class="row g-3 mb-4">
+            <div class="col-6">
+                <div class="scale-option selected" onclick="selectScale(2, this)">
+                    <input type="radio" name="scale_opt" checked>
+                    <h3 class="mb-1" style="color:#818cf8;">2x</h3>
+                    <p class="text-muted mb-0 small">Double resolution</p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="scale-option" onclick="selectScale(4, this)">
+                    <input type="radio" name="scale_opt">
+                    <h3 class="mb-1" style="color:#c084fc;">4x</h3>
+                    <p class="text-muted mb-0 small">Quadruple resolution</p>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 rounded-pill py-3" id="upscaleBtn" disabled>
+            <i class="fas fa-magic me-2"></i>Upscale Image
+        </button>
+    </form>
+</div>
+
+<div style="height:5rem;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+var dropZone = document.getElementById('dropZone');
+var imageInput = document.getElementById('imageInput');
+var preview = document.getElementById('preview');
+var previewImg = document.getElementById('previewImg');
+var upscaleBtn = document.getElementById('upscaleBtn');
+
+dropZone.addEventListener('click', function() { imageInput.click(); });
+dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('dragover'); });
+dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+        imageInput.files = e.dataTransfer.files;
+        showPreview(e.dataTransfer.files[0]);
+    }
+});
+imageInput.addEventListener('change', function() {
+    if (this.files.length) showPreview(this.files[0]);
+});
+function showPreview(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        preview.style.display = 'block';
+        upscaleBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+}
+function selectScale(val, el) {
+    document.getElementById('scaleInput').value = val;
+    document.querySelectorAll('.scale-option').forEach(function(o) { o.classList.remove('selected'); });
+    el.classList.add('selected');
+}
+</script>
+</body>
+</html>
