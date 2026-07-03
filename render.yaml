@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: neuralart-studio
+    env: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /
