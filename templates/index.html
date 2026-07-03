@@ -21,26 +21,109 @@
     }
     [id] { scroll-margin-top: 80px; }
     .header-section {
-        padding: 5rem 0 3rem;
+        padding: 6.5rem 0 4rem;
         text-align: center;
         position: relative;
+        overflow: hidden;
+    }
+    .hero-glow-aura {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 700px;
+        height: 350px;
+        background: radial-gradient(circle, rgba(129, 140, 248, 0.22) 0%, rgba(168, 85, 247, 0.15) 50%, rgba(0, 0, 0, 0) 70%);
+        filter: blur(50px);
+        z-index: 0;
+        pointer-events: none;
+        animation: pulse-aura 7s ease-in-out infinite alternate;
+    }
+    @keyframes pulse-aura {
+        0% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
+        100% { transform: translate(-50%, -50%) scale(1.18); opacity: 1; }
+    }
+    .hero-status-badge {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    .hero-status-badge:hover {
+        transform: translateY(-2px);
+        border-color: rgba(129, 140, 248, 0.6) !important;
+    }
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #34d399;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #34d399;
+        animation: pulse-green 2s infinite;
+        display: inline-block;
+    }
+    @keyframes pulse-green {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
     }
     .header-section h1 {
         font-family: 'Orbitron', sans-serif;
-        font-weight: 700;
-        font-size: 3.5rem;
-        background: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
+        font-weight: 800;
+        font-size: clamp(2.8rem, 6vw, 4.8rem);
+        letter-spacing: 2px;
+        line-height: 1.15;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        margin-bottom: 1.25rem;
+        position: relative;
+        z-index: 1;
+    }
+    .text-gradient-hero {
+        background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 30px rgba(192, 132, 252, 0.3);
-        margin-bottom: 1rem;
+        display: inline-block;
+    }
+    .hero-ai-tag {
+        font-weight: 300;
+        color: #fff;
+        opacity: 0.95;
+        text-shadow: 0 0 25px rgba(192, 132, 252, 0.6);
     }
     .header-section .lead {
-        font-size: 1.25rem;
+        font-size: clamp(1.05rem, 2vw, 1.3rem);
         color: #94a3b8;
-        max-width: 600px;
+        max-width: 680px;
         margin: 0 auto;
+        line-height: 1.65;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
     }
+    .hero-chip {
+        background: rgba(30, 41, 59, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.45rem 1.1rem;
+        border-radius: 50rem;
+        font-size: 0.85rem;
+        color: #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .hero-chip:hover {
+        background: rgba(51, 65, 85, 0.85);
+        border-color: rgba(129, 140, 248, 0.4);
+        color: #fff;
+        transform: translateY(-2.5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+    .text-purple { color: #c084fc; }
     .card {
         background: rgba(30, 41, 59, 0.6);
         backdrop-filter: blur(12px);
@@ -412,40 +495,160 @@
 
     /* Navbar Styles */
     .navbar {
-        background: rgba(15, 23, 42, 0.8);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(15, 23, 42, 0.75) !important;
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        padding: 0.75rem 0;
+        transition: all 0.3s ease;
     }
     .navbar-brand {
         font-family: 'Orbitron', sans-serif;
-        font-weight: 700;
-        font-size: 1.5rem;
-        background: linear-gradient(to right, #818cf8, #c084fc);
+        font-weight: 800;
+        font-size: 1.45rem;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        display: flex;
+        align-items: center;
+    }
+    .brand-icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+        transition: transform 0.3s ease;
+    }
+    .navbar-brand:hover .brand-icon-box {
+        transform: rotate(10deg) scale(1.05);
     }
     .nav-link {
-        color: #e2e8f0 !important;
+        color: #cbd5e1 !important;
         font-weight: 500;
-        margin-left: 1rem;
-        transition: color 0.3s;
+        font-size: 0.92rem;
+        padding: 0.5rem 0.9rem !important;
+        margin-left: 0.2rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
         position: relative;
     }
     .nav-link:hover {
-        color: #818cf8 !important;
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.05);
     }
     .nav-link::after {
         content: '';
         position: absolute;
         width: 0;
         height: 2px;
-        bottom: 0;
-        left: 0;
-        background-color: #818cf8;
-        transition: width 0.3s;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, #818cf8, #c084fc);
+        transition: width 0.3s ease;
+        border-radius: 2px;
     }
     .nav-link:hover::after {
-        width: 100%;
+        width: 60%;
+    }
+
+    /* Navbar Tool Buttons & Profile Pill */
+    .nav-tool-btn {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #cbd5e1 !important;
+        font-size: 0.82rem;
+        font-weight: 500;
+        padding: 0.45rem 0.95rem;
+        border-radius: 50rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        text-decoration: none !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(8px);
+    }
+    .nav-tool-btn:hover {
+        background: rgba(51, 65, 85, 0.9);
+        border-color: rgba(129, 140, 248, 0.5);
+        color: #fff !important;
+        transform: translateY(-1.5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .nav-tool-glow {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(168, 85, 247, 0.25) 100%);
+        border-color: rgba(168, 85, 247, 0.45);
+        color: #f3e8ff !important;
+    }
+    .nav-tool-glow:hover {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.85) 0%, rgba(168, 85, 247, 0.85) 100%);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 18px rgba(168, 85, 247, 0.45);
+    }
+    .nav-tool-admin {
+        background: rgba(245, 158, 11, 0.15);
+        border-color: rgba(245, 158, 11, 0.35);
+        color: #fef3c7 !important;
+    }
+    .nav-tool-admin:hover {
+        background: rgba(245, 158, 11, 0.25);
+        border-color: rgba(245, 158, 11, 0.6);
+        color: #fff !important;
+    }
+    .user-profile-pill {
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 0.3rem 0.85rem 0.3rem 0.35rem;
+        border-radius: 50rem;
+        transition: all 0.25s ease;
+        color: #f8fafc;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .user-profile-pill:hover {
+        background: rgba(51, 65, 85, 0.95);
+        border-color: rgba(129, 140, 248, 0.5);
+        box-shadow: 0 0 18px rgba(129, 140, 248, 0.25);
+    }
+    .user-avatar-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.78rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .glass-dropdown-menu {
+        background: rgba(15, 23, 42, 0.95) !important;
+        backdrop-filter: blur(20px);
+        border-radius: 14px;
+        min-width: 220px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    }
+    .glass-dropdown-menu .dropdown-item {
+        color: #cbd5e1;
+        font-size: 0.88rem;
+        padding: 0.6rem 1.2rem;
+        transition: all 0.2s;
+    }
+    .glass-dropdown-menu .dropdown-item:hover {
+        background: rgba(129, 140, 248, 0.15);
+        color: #fff;
+        transform: translateX(3px);
     }
 
     /* Footer Styles */
@@ -608,15 +811,7 @@
         opacity: 1 !important;
     }
 
-    /* FIX #20: Moved typing animation keyframes from body to head */
-    @keyframes typing {
-        from { width: 0 }
-        to { width: 100% }
-    }
-    @keyframes blink-caret {
-        from, to { border-color: transparent }
-        50% { border-color: rgba(255,255,255,0.75); }
-    }
+    /* Removed retro typing animation keyframes for cleaner hero typography */
 
     /* ========================
        DRAG & DROP UPLOAD ZONES
@@ -944,41 +1139,64 @@
 
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#"><i class="fas fa-brain me-2"></i>NeuralArt</a>
-        <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+            <div class="brand-icon-box">
+                <i class="fas fa-brain"></i>
+            </div>
+            <span>Neural<span style="background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Art</span></span>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill fw-semibold ms-1 px-2 py-1" style="font-size: 0.62rem; letter-spacing: 0.5px;">STUDIO</span>
+        </a>
+        <button class="navbar-toggler navbar-dark border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('gallery') }}">Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
                 <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
             </ul>
+            <div class="d-flex align-items-center gap-2 ms-lg-3 mt-2 mt-lg-0 flex-wrap">
             {% if current_user.is_authenticated %}
                 {% if current_user.is_admin %}
-                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-outline-warning ms-2 rounded-pill px-3">
-                    <i class="fas fa-shield-alt me-1"></i>Admin
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-tool-btn nav-tool-admin" title="Admin Panel">
+                    <i class="fas fa-shield-alt text-warning"></i><span>Admin</span>
                 </a>
                 {% endif %}
-                <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-light ms-2 rounded-pill px-3">
-                    <i class="fas fa-th-large me-1"></i>Dashboard
+                <a href="{{ url_for('dashboard') }}" class="nav-tool-btn" title="Studio Dashboard">
+                    <i class="fas fa-th-large text-indigo"></i><span>Dashboard</span>
                 </a>
-                <a href="{{ url_for('upscale') }}" class="btn btn-sm btn-outline-info ms-2 rounded-pill px-3">
-                    <i class="fas fa-expand-arrows-alt me-1"></i>Upscale
+                <a href="{{ url_for('upscale') }}" class="nav-tool-btn" title="AI Upscaler">
+                    <i class="fas fa-expand-arrows-alt text-cyan"></i><span>Upscale</span>
                 </a>
-                <a href="{{ url_for('text_to_image') }}" class="btn btn-sm btn-outline-warning ms-2 rounded-pill px-3">
-                    <i class="fas fa-pen-fancy me-1"></i>Text to Image
+                <a href="{{ url_for('text_to_image') }}" class="nav-tool-btn nav-tool-glow" title="Text to Image">
+                    <i class="fas fa-wand-magic-sparkles"></i><span>Create Art</span>
                 </a>
-                <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-light ms-2 rounded-pill px-3">
-                    <i class="fas fa-user me-1"></i>Profile
-                </a>
-                <span class="navbar-text ms-3 text-light">Welcome, {{ current_user.name }}</span>
-                <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-light ms-3 rounded-pill px-4">Logout</a>
+                
+                <!-- Premium User Profile Pill & Dropdown -->
+                <div class="dropdown ms-1">
+                    <a class="user-profile-pill dropdown-toggle d-flex align-items-center gap-2 text-decoration-none" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-avatar-circle">{{ current_user.name[:1]|upper if current_user.name else 'U' }}</div>
+                        <span class="d-none d-sm-inline">{{ current_user.name }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark glass-dropdown-menu shadow-lg py-2 mt-2" aria-labelledby="userDropdown">
+                        <li class="px-3 py-1 mb-1 border-bottom border-secondary-subtle">
+                            <div class="text-xs text-muted" style="font-size: 0.72rem;">Signed in as</div>
+                            <div class="fw-semibold text-light text-truncate" style="max-width: 170px; font-size: 0.88rem;">{{ current_user.email or current_user.name }}</div>
+                        </li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url_for('profile') }}"><i class="fas fa-user-circle text-indigo"></i> My Profile</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url_for('dashboard') }}"><i class="fas fa-layer-group text-cyan"></i> My Artworks</a></li>
+                        <li><hr class="dropdown-divider border-secondary-subtle my-1"></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
             {% else %}
-                <a href="#" class="btn btn-sm btn-outline-light ms-3 rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#signInModal">Sign In</a>
+                <a href="#" class="btn btn-sm btn-primary rounded-pill px-4 fw-semibold shadow-sm" style="padding: 0.45rem 1.25rem; font-size: 0.85rem;" data-bs-toggle="modal" data-bs-target="#signInModal">
+                    <i class="fas fa-user me-1"></i> Sign In
+                </a>
             {% endif %}
+            </div>
         </div>
     </div>
 </nav>
@@ -1015,9 +1233,33 @@
 {% endif %}
 
 <div class="header-section" id="home">
-    <div class="container">
-        <h1 class="display-4 fw-bold">STYLEFORGE AI</h1>
-        <p class="lead" style="border-right: 2px solid rgba(255,255,255,0.75); white-space: nowrap; overflow: hidden; width: 0; animation: typing 3.5s steps(40, end) forwards, blink-caret .75s step-end infinite; margin: 0 auto; display: inline-block; text-align: left;">Redefine Reality with AI-Powered Artistry</p>
+    <div class="hero-glow-aura"></div>
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-4 rounded-pill hero-status-badge border border-secondary-subtle">
+            <span class="pulse-dot"></span>
+            <span class="fw-semibold text-light" style="font-size: 0.82rem;">Next-Gen AI Art &amp; Style Transfer Engine v2.5</span>
+            <span class="badge bg-indigo-subtle text-indigo rounded-pill px-2 py-0" style="font-size: 0.68rem; background: rgba(99, 102, 241, 0.2); color: #818cf8;">LIVE</span>
+        </div>
+        <h1 class="hero-title fw-bold mb-3">
+            STYLE<span class="text-gradient-hero">FORGE</span> <span class="hero-ai-tag">AI</span>
+        </h1>
+        <p class="hero-subtitle mb-4">
+            Transform ordinary photos into extraordinary artistic masterpieces in real-time. Powered by cutting-edge AdaIN neural architecture, generative upscaling, and SDXL synthesis.
+        </p>
+        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap mt-4 hero-feature-chips">
+            <div class="hero-chip">
+                <i class="fas fa-bolt text-warning"></i> <span>0.2s Real-Time Rendering</span>
+            </div>
+            <div class="hero-chip">
+                <i class="fas fa-wand-magic-sparkles text-purple"></i> <span>AdaIN Neural Transfer</span>
+            </div>
+            <div class="hero-chip">
+                <i class="fas fa-high-definition text-info"></i> <span>4K Generative Upscaling</span>
+            </div>
+            <div class="hero-chip">
+                <i class="fas fa-shield-alt text-success"></i> <span>100% Private &amp; Secure</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1654,6 +1896,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
     function previewFile(input, previewId) {
         const preview = document.getElementById(previewId);
@@ -1683,97 +1926,194 @@
             });
         });
 
-        // Neural Network Background Animation
+        // =========================================================================
+        // NEXT-GEN 3D AMBIENT COSMOS & NEURAL NEBULA (THREE.JS)
+        // Perfectly matched to STYLEFORGE AI: Deep Z-space ambient spheres & floating bokeh stardust
+        // Zero visual clutter over cards or text!
+        // =========================================================================
         const canvas = document.getElementById('neuralCanvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let particles = [];
-        let mouse = { x: null, y: null, radius: 150 };
+        let scene, camera, renderer, nebulaGroup, stardustMesh, deepWaveMesh;
+        let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+        let clock = typeof THREE !== 'undefined' ? new THREE.Clock() : null;
 
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 3 + 1.5;
-                // Assign one of 10 colors to group nodes
-                this.hue = Math.floor(Math.random() * 10) * 36;
-                this.density = (Math.random() * 30) + 1;
+        function init3DBackground() {
+            if (typeof THREE === 'undefined') {
+                initFallback2D();
+                return;
             }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
 
-                // Mouse interaction
-                if (mouse.x != null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius) {
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
-                        const force = (mouse.radius - distance) / mouse.radius;
-                        const directionX = forceDirectionX * force * this.density;
-                        const directionY = forceDirectionY * force * this.density;
-                        this.x -= directionX;
-                        this.y -= directionY;
-                    }
-                }
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.0018);
 
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-                this.hue = (this.hue + 0.2) % 360;
-            }
-            draw() {
-                ctx.fillStyle = `hsla(${this.hue}, 70%, 60%, 0.3)`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+            camera.position.set(0, 0, 300);
 
-        function initParticles() {
-            particles = [];
-            const numParticles = Math.floor(window.innerWidth / 15);
-            for (let i = 0; i < numParticles; i++) particles.push(new Particle());
-        }
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            particles.forEach((p, i) => {
-                p.update();
-                p.draw();
-                for (let j = i + 1; j < particles.length; j++) {
-                    const p2 = particles[j];
-                    const d = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if (d < 100) {
-                        ctx.strokeStyle = `hsla(${p.hue}, 70%, 60%, ${0.15 * (1 - d/100)})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                }
+            // 1. DEEP AMBIENT HORIZON WAVE (Far below and behind UI cards: Z = -450, Y = -260)
+            const waveGeo = new THREE.PlaneGeometry(2400, 1200, 80, 50);
+            const waveMat = new THREE.PointsMaterial({
+                size: 2.2,
+                color: 0x6366f1,
+                transparent: true,
+                opacity: 0.38,
+                blending: THREE.AdditiveBlending
             });
-            requestAnimationFrame(animate);
+            deepWaveMesh = new THREE.Points(waveGeo, waveMat);
+            deepWaveMesh.rotation.x = -Math.PI / 2.08;
+            deepWaveMesh.position.set(0, -260, -450);
+            scene.add(deepWaveMesh);
+
+            // 2. 3D FLOATING BOKEH STARDUST (Soft ambient glowing dust drifting in deep space)
+            const stardustCount = 350;
+            const stardustGeo = new THREE.BufferGeometry();
+            const stardustPositions = new Float32Array(stardustCount * 3);
+            const stardustColors = new Float32Array(stardustCount * 3);
+            
+            const c1 = new THREE.Color(0xc084fc); // Purple
+            const c2 = new THREE.Color(0x818cf8); // Indigo
+            const c3 = new THREE.Color(0x38bdf8); // Cyan
+            const c4 = new THREE.Color(0xf472b6); // Pink
+
+            for (let i = 0; i < stardustCount; i++) {
+                stardustPositions[i * 3] = (Math.random() - 0.5) * 1600;
+                stardustPositions[i * 3 + 1] = (Math.random() - 0.5) * 900;
+                stardustPositions[i * 3 + 2] = (Math.random() - 0.5) * 1000 - 150; // Keep behind Z = -150!
+
+                let randColor = Math.random();
+                let col = randColor < 0.33 ? c1 : (randColor < 0.66 ? c2 : (randColor < 0.85 ? c3 : c4));
+                stardustColors[i * 3] = col.r;
+                stardustColors[i * 3 + 1] = col.g;
+                stardustColors[i * 3 + 2] = col.b;
+            }
+            stardustGeo.setAttribute('position', new THREE.BufferAttribute(stardustPositions, 3));
+            stardustGeo.setAttribute('color', new THREE.BufferAttribute(stardustColors, 3));
+
+            const stardustMat = new THREE.PointsMaterial({
+                size: 3.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.55,
+                blending: THREE.AdditiveBlending
+            });
+            stardustMesh = new THREE.Points(stardustGeo, stardustMat);
+            scene.add(stardustMesh);
+
+            // 3. 3D AMBIENT NEBULA AURORA ORBS (Soft glowing spheres orbiting in deep space, Z = -400)
+            nebulaGroup = new THREE.Group();
+            const orbGeo = new THREE.IcosahedronGeometry(70, 3);
+            
+            const orbMat1 = new THREE.PointsMaterial({ size: 2.0, color: 0x818cf8, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
+            const orb1 = new THREE.Points(orbGeo, orbMat1);
+            orb1.position.set(-280, 120, -420);
+            nebulaGroup.add(orb1);
+
+            const orbMat2 = new THREE.PointsMaterial({ size: 2.5, color: 0xc084fc, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+            const orb2 = new THREE.Points(orbGeo, orbMat2);
+            orb2.position.set(300, -100, -480);
+            nebulaGroup.add(orb2);
+
+            const orbMat3 = new THREE.PointsMaterial({ size: 1.8, color: 0x38bdf8, transparent: true, opacity: 0.28, blending: THREE.AdditiveBlending });
+            const orb3 = new THREE.Points(orbGeo, orbMat3);
+            orb3.position.set(0, 180, -550);
+            nebulaGroup.add(orb3);
+
+            scene.add(nebulaGroup);
+
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            animate3D();
         }
 
-        window.addEventListener('resize', () => { resize(); initParticles(); });
-        window.addEventListener('mousemove', (event) => {
-            mouse.x = event.clientX;
-            mouse.y = event.clientY;
-        });        
-        resize();
-        initParticles();
-        animate();
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.25;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.25;
+        }
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            const elapsedTime = clock ? clock.getElapsedTime() : Date.now() * 0.001;
+
+            // Cinematic parallax camera movement (smooth easing)
+            targetX += (mouseX - targetX) * 0.04;
+            targetY += (-mouseY - targetY) * 0.04;
+            camera.position.x = targetX;
+            camera.position.y = targetY * 0.5;
+            camera.lookAt(0, 0, -200);
+
+            // Animate Deep Horizon Wave
+            if (deepWaveMesh) {
+                const pos = deepWaveMesh.geometry.attributes.position;
+                for (let i = 0; i < pos.count; i++) {
+                    const u = pos.getX(i);
+                    const v = pos.getY(i);
+                    const z = Math.sin(u * 0.01 + elapsedTime * 1.2) * 18 + Math.cos(v * 0.01 + elapsedTime * 1.0) * 18;
+                    pos.setZ(i, z);
+                }
+                pos.needsUpdate = true;
+            }
+
+            // Animate Floating Stardust
+            if (stardustMesh) {
+                const positions = stardustMesh.geometry.attributes.position.array;
+                for (let i = 1; i < positions.length; i += 3) {
+                    positions[i] += 0.35; // Slowly float upward
+                    if (positions[i] > 450) positions[i] = -450;
+                }
+                stardustMesh.geometry.attributes.position.needsUpdate = true;
+                stardustMesh.rotation.y = elapsedTime * 0.03;
+            }
+
+            // Animate Ambient Nebula Aurora Orbs
+            if (nebulaGroup) {
+                nebulaGroup.rotation.y = elapsedTime * 0.08;
+                nebulaGroup.rotation.z = Math.sin(elapsedTime * 0.5) * 0.1;
+                nebulaGroup.children.forEach((orb, idx) => {
+                    const scale = 1 + Math.sin(elapsedTime * 1.5 + idx) * 0.12;
+                    orb.scale.set(scale, scale, scale);
+                });
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Fallback 2D Starfield & Cyber Mesh if Three.js CDN fails
+        function initFallback2D() {
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            let stars = Array.from({length: 150}, () => ({
+                x: Math.random() * width, y: Math.random() * height,
+                size: Math.random() * 2.2 + 1, speed: Math.random() * 0.4 + 0.15, hue: Math.random() > 0.5 ? 260 : 190
+            }));
+            window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
+            function loop() {
+                ctx.clearRect(0, 0, width, height);
+                stars.forEach(s => {
+                    s.y -= s.speed;
+                    if (s.y < 0) s.y = height;
+                    ctx.fillStyle = `hsla(${s.hue}, 85%, 70%, 0.55)`;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        init3DBackground();
         // FIX #8: Range Slider Logic \u2014 syncs visible range input to hidden WTForms alpha field
         const range = document.getElementById('alphaRange');
         const rangeValue = document.getElementById('rangeValue');
