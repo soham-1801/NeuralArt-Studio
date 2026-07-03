@@ -19,4 +19,5 @@ COPY . .
 EXPOSE 10000 7860 5000
 
 # Dynamically bind to Render's PORT environment variable (defaulting to 10000 for Render / 7860 for HF Spaces)
-CMD gunicorn --workers 2 --timeout 120 --bind 0.0.0.0:${PORT:-10000} app:app
+# Using 1 worker with 4 threads and --preload prevents Out of Memory (OOM) 502 errors on 512MB Free Tier servers
+CMD gunicorn --workers 1 --threads 4 --timeout 180 --preload --bind 0.0.0.0:${PORT:-10000} app:app

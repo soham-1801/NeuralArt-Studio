@@ -334,6 +334,8 @@ class UploadForm(FlaskForm):
     submit = SubmitField('Transfer Style')
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if device.type == "cpu":
+    torch.set_num_threads(2)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 try:
