@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 7860
+EXPOSE 10000 7860 5000
 
-# Default port 7860 for Hugging Face Spaces and container deployments
-CMD ["gunicorn", "--workers", "2", "--timeout", "120", "--bind", "0.0.0.0:7860", "app:app"]
+# Dynamically bind to Render's PORT environment variable (defaulting to 10000 for Render / 7860 for HF Spaces)
+CMD gunicorn --workers 2 --timeout 120 --bind 0.0.0.0:${PORT:-10000} app:app
