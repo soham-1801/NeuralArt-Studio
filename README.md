@@ -38,17 +38,25 @@
 
 > **💡 Note on $\alpha$ (Alpha) Parameter**: Notice how $\alpha = 1.0$ applies the full texture and geometry of Picasso's style, while $\alpha = 0.7$ creates a softer blend that preserves more facial likeness from the original content image.
 
-### Interactive Style Studio (`/`)
-*Real-time workspace where creators upload content and style images, adjust $\alpha$ blending sliders, and toggle color preservation mode.*
+### 1. Interactive Style Studio (`/`)
+![Interactive Style Studio](./examples/screenshot_studio.png)
+*Real-time workspace where creators upload content and style images, adjust α blending sliders, and toggle color preservation mode.*
 
-### Community Art Gallery (`/gallery`)
+### 2. Community Art Gallery (`/gallery`)
+![Community Art Gallery](./examples/screenshot_gallery.png)
 *Social feed displaying user-published artworks with real-time like counters, creator tags, and high-definition download options.*
 
-### Personal Creator Dashboard (`/dashboard`)
-*Private management panel tracking personal transfer history, API key generation, and account profile settings.*
-
-### AI Art Challenges (`/challenges`)
+### 3. AI Art Challenges (`/challenges`)
+![AI Art Challenges](./examples/screenshot_challenges.png)
 *Curated community contests where users submit stylized masterpieces to weekly themed competitions and vote for winners.*
+
+### 4. AI Image Upscaling (`/upscale`)
+![AI Image Upscaling](./examples/screenshot_ai_suite.png)
+*Integrated AI upscaling suite allowing creators to transform standard style outputs into ultra-high-resolution prints.*
+
+### 5. Text-to-Image Synthesis (`/text-to-image`)
+![Text-to-Image Synthesis](./examples/screenshot_txt2img.png)
+*Built-in synthetic art generation powered by NLP prompt enhancement and automated styling workflows.*
 
 ---
 
