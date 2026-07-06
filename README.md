@@ -42,19 +42,15 @@
 ![Personal Creator Dashboard](./examples/screenshot_dashboard.png)
 *Private management panel tracking personal transfer history, API key generation, and account profile settings.*
 
-### 2. Admin Management Portal (`/admin`)
-![Admin Management Portal](./examples/screenshot_admin.png)
-*Institutional-grade administration dashboard providing real-time platform analytics, user role management, and system governance.*
-
-### 3. Interactive Style Studio (`/`)
+### 2. Interactive Style Studio (`/`)
 ![Interactive Style Studio](./examples/screenshot_studio.png)
 *Real-time authenticated workspace where creators upload content and style images, adjust α blending sliders, and toggle color preservation mode.*
 
-### 4. Community Art Gallery (`/gallery`)
+### 3. Community Art Gallery (`/gallery`)
 ![Community Art Gallery](./examples/screenshot_gallery.png)
 *Social feed displaying user-published artworks with real-time like counters, creator tags, and high-definition download options.*
 
-### 5. AI Image Upscaling Suite (`/upscale`)
+### 4. AI Image Upscaling Suite (`/upscale`)
 ![AI Image Upscaling Suite](./examples/screenshot_ai_suite.png)
 *Integrated AI upscaling suite allowing creators to transform standard style outputs into ultra-high-resolution prints.*
 
