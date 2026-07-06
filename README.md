@@ -32,9 +32,9 @@
 
 ### Style Transfer Showcase (AdaIN Pipeline)
 
-| 🧑 Content Image | 🎨 Style Image (Picasso) | ✨ Stylized Result ($\alpha=1.0$) | ✨ Stylized Result ($\alpha=0.7$) |
+| 🧑 Content Image | 🎨 Style (Picasso) | ✨ Result (α = 1.0) | ✨ Result (α = 0.7) |
 | :---: | :---: | :---: | :---: |
-| ![Content](./examples/brad_pitt.jpg) | ![Style](./examples/picasso_seated_nude_hr.jpg) | ![Result 1](./examples/stylized_brad_pitt.jpg) | ![Result 2](./examples/stylized_brad_pitt_2.jpg) |
+| ![Content](./examples/brad_pitt.jpg) | ![Style](./examples/picasso_512.jpg) | ![Result 1](./examples/stylized_brad_pitt.jpg) | ![Result 2](./examples/stylized_brad_pitt_2.jpg) |
 
 > **💡 Note on $\alpha$ (Alpha) Parameter**: Notice how $\alpha = 1.0$ applies the full texture and geometry of Picasso's style, while $\alpha = 0.7$ creates a softer blend that preserves more facial likeness from the original content image.
 
