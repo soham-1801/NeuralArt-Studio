@@ -38,25 +38,25 @@
 
 > **💡 Note on $\alpha$ (Alpha) Parameter**: Notice how $\alpha = 1.0$ applies the full texture and geometry of Picasso's style, while $\alpha = 0.7$ creates a softer blend that preserves more facial likeness from the original content image.
 
-### 1. Interactive Style Studio (`/`)
-![Interactive Style Studio](./examples/screenshot_studio.png)
-*Real-time workspace where creators upload content and style images, adjust α blending sliders, and toggle color preservation mode.*
+### 1. Personal Creator Dashboard (`/dashboard`)
+![Personal Creator Dashboard](./examples/screenshot_dashboard.png)
+*Private management panel tracking personal transfer history, API key generation, and account profile settings.*
 
-### 2. Community Art Gallery (`/gallery`)
+### 2. Admin Management Portal (`/admin`)
+![Admin Management Portal](./examples/screenshot_admin.png)
+*Institutional-grade administration dashboard providing real-time platform analytics, user role management, and system governance.*
+
+### 3. Interactive Style Studio (`/`)
+![Interactive Style Studio](./examples/screenshot_studio.png)
+*Real-time authenticated workspace where creators upload content and style images, adjust α blending sliders, and toggle color preservation mode.*
+
+### 4. Community Art Gallery (`/gallery`)
 ![Community Art Gallery](./examples/screenshot_gallery.png)
 *Social feed displaying user-published artworks with real-time like counters, creator tags, and high-definition download options.*
 
-### 3. AI Art Challenges (`/challenges`)
-![AI Art Challenges](./examples/screenshot_challenges.png)
-*Curated community contests where users submit stylized masterpieces to weekly themed competitions and vote for winners.*
-
-### 4. AI Image Upscaling (`/upscale`)
-![AI Image Upscaling](./examples/screenshot_ai_suite.png)
+### 5. AI Image Upscaling Suite (`/upscale`)
+![AI Image Upscaling Suite](./examples/screenshot_ai_suite.png)
 *Integrated AI upscaling suite allowing creators to transform standard style outputs into ultra-high-resolution prints.*
-
-### 5. Text-to-Image Synthesis (`/text-to-image`)
-![Text-to-Image Synthesis](./examples/screenshot_txt2img.png)
-*Built-in synthetic art generation powered by NLP prompt enhancement and automated styling workflows.*
 
 ---
 
