@@ -22,12 +22,17 @@ wheels/
 *.egg
 venv/
 .env
+.conda/
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
 instance/
+
+# Training Outputs & Experiments
+experiment/*
+!experiment/.gitkeep
 
 # User Uploads and Generated Images (Keep the directory structure but ignore contents)
 static/uploads/*
@@ -36,10 +41,11 @@ static/uploads/*
 !static/uploads/default_avatar.png
 !static/uploads/preset_*
 
-# IDE / System
+# IDE / System & Temporary Files
 .vscode/
 .idea/
 .gemini/
 *.log
+BUG_REPORT.txt
 .DS_Store
 Thumbs.db
